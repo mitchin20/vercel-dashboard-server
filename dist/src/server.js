@@ -21,8 +21,6 @@ const cors_1 = __importDefault(require("cors"));
 const database_1 = require("./db/database");
 const routes_1 = __importDefault(require("./routes"));
 // import { authMiddleware } from "./authMiddleware";
-// private routes
-// public routes
 const app = (0, express_1.default)();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 if (PORT === 80) {
@@ -39,11 +37,18 @@ app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use(rateLimit_1.default);
 app.use((0, morgan_1.default)(":method :url :status :res[content-length] - :response-time ms"));
-app.options("*", (0, cors_1.default)({
-    origin: allowedOrigins,
-    // origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    // credentials: true, // Allow cookies if needed
 }));
 app.get("/health", (req, res) => {
     res.status(200).send("Application is healthy!");
