@@ -23,7 +23,6 @@ const routes_1 = __importDefault(require("./routes"));
 // import { authMiddleware } from "./authMiddleware";
 // private routes
 // public routes
-console.log("Using PORT: ", process.env.PORT);
 const app = (0, express_1.default)();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 if (PORT === 80) {
@@ -32,15 +31,15 @@ if (PORT === 80) {
 }
 const allowedOrigins = [
     "http://localhost:3000",
-    "http://ec2-34-229-201-159.compute-1.amazonaws.com/",
-    "https://dashboard-client-sigma-ecru.vercel.app/",
-    "https://dashboard-client-mbnb2prdu-giangs-projects-52c6f04e.vercel.app/",
+    "http://ec2-34-229-201-159.compute-1.amazonaws.com",
+    "https://dashboard-client-sigma-ecru.vercel.app",
+    "https://dashboard-client-mbnb2prdu-giangs-projects-52c6f04e.vercel.app",
 ];
 app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use(rateLimit_1.default);
 app.use((0, morgan_1.default)(":method :url :status :res[content-length] - :response-time ms"));
-app.use((0, cors_1.default)({
+app.options("*", (0, cors_1.default)({
     origin: allowedOrigins,
     // origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
